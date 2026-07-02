@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ký ức điện tử — Review game thế hệ đầu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f2f2f0;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #111;
+    }
+
+    /* ── Wrapper ── */
+    .site {
+      max-width: 960px;
+      margin: 28px auto;
+      background: #fff;
+      border: 1px solid #e0e0de;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* ── Nav ── */
+    .topbar {
+      border-bottom: 1px solid #e0e0de;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 54px;
+      background: #fff;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #111;
+      text-decoration: none;
+      letter-spacing: -0.2px;
+    }
+    .logo span {
+      color: #999;
+      font-size: 12px;
+      font-weight: 400;
+      font-family: 'Inter', sans-serif;
+      margin-left: 8px;
+    }
+    nav ul { display: flex; gap: 22px; list-style: none; }
+    nav a { color: #555; font-size: 13px; text-decoration: none; }
+    nav a:hover, nav a.active { color: #111; font-weight: 500; }
+
+    /* ── Page views ── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ══════════════════════════════
+       HOME VIEW
+    ══════════════════════════════ */
+
+    /* Featured */
+    .hero {
+      background: #f7f6f3;
+      border-bottom: 1px solid #e0e0de;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      cursor: pointer;
+    }
+    .hero:hover .hero-title { text-decoration: underline; }
+    .hero-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #999; margin-bottom: 5px; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 600; color: #111; line-height: 1.3; }
+    .hero-sub { font-size: 12px; color: #777; margin-top: 4px; }
+    .hero-thumb {
+      width: 96px; height: 70px; border-radius: 6px;
+      flex-shrink: 0; margin-left: auto;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-thumb span { font-size: 11px; font-weight: 600; text-align: center; line-height: 1.4; padding: 6px; }
+
+    /* Body 2-col */
+    .body { display: grid; grid-template-columns: 1fr 210px; }
+    .main { padding: 22px 28px; border-right: 1px solid #e8e8e6; }
+    .section-label {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.07em;
+      text-transform: uppercase; color: #999;
+      margin-bottom: 14px; padding-bottom: 8px;
+      border-bottom: 1px solid #e8e8e6;
+    }
+
+    /* Article card */
+    .article-card {
+      display: grid; grid-template-columns: 78px 1fr;
+      gap: 14px; padding: 13px 0;
+      border-bottom: 1px solid #f0f0ee;
+      cursor: pointer;
+    }
+    .article-card:last-child { border-bottom: none; }
+    .article-card:hover .art-title { text-decoration: underline; }
+    .thumb {
+      width: 78px; height: 56px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0;
+    }
+    .thumb-inner { font-size: 10px; font-weight: 600; text-align: center; line-height: 1.35; letter-spacing: 0.02em; }
+    .t-grandia  { background: #1a1030; } .t-grandia  .thumb-inner { color: #c8b4e0; }
+    .t-freedom  { background: #0a1a10; } .t-freedom  .thumb-inner { color: #88cc88; }
+    .t-blade    { background: #1a0a00; } .t-blade    .thumb-inner { color: #cc8844; }
+    .t-amadis   { background: #0a1020; } .t-amadis   .thumb-inner { color: #aabbee; }
+    .t-seal     { background: #1a1000; } .t-seal     .thumb-inner { color: #ddbb44; }
+    .t-fable    { background: #0d1a0a; } .t-fable    .thumb-inner { color: #88dd66; }
+    .art-meta-top { font-size: 10px; color: #999; margin-bottom: 3px; }
+    .art-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; color: #111; line-height: 1.35; margin-bottom: 4px; }
+    .art-excerpt { font-size: 12px; color: #666; line-height: 1.5; }
+    .art-meta-bot { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+    .art-date { font-size: 11px; color: #bbb; }
+    .rating { font-size: 11px; color: #f0a020; letter-spacing: 1px; }
+    .badge {
+      display: inline-block; font-size: 9px; padding: 1px 5px;
+      border-radius: 3px; font-weight: 500; margin-right: 3px;
+    }
+    .b-ps1  { background: #ede8f4; color: #5a2a8a; }
+    .b-dos  { background: #e8f4e8; color: #2a6a2a; }
+    .b-xbox { background: #e8f4ec; color: #1a5c2a; }
+    .b-pc   { background: #f0f0f8; color: #3a3a7a; }
+    .b-snes { background: #fde8e8; color: #8a2a2a; }
+    .b-dc   { background: #e8eef8; color: #1a3a7a; }
+
+    /* Sidebar */
+    .sidebar { padding: 20px 16px; background: #faf9f7; }
+    .sb-section { margin-bottom: 20px; }
+    .sb-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; margin-bottom: 10px; }
+    .sb-item { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f0eeec; align-items: flex-start; }
+    .sb-item:last-child { border-bottom: none; }
+    .sb-num { font-size: 11px; color: #ccc; min-width: 16px; padding-top: 1px; }
+    .sb-text { font-size: 12px; color: #333; line-height: 1.4; }
+    .sb-platform { font-size: 10px; color: #bbb; margin-top: 1px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag {
+      font-size: 11px; color: #555; background: #f0eeec;
+      padding: 3px 9px; border-radius: 20px; cursor: pointer; text-decoration: none;
+    }
+    .tag:hover { background: #e5e3e0; }
+
+    /* ══════════════════════════════
+       ARTICLE VIEW
+    ══════════════════════════════ */
+    .article-view { padding: 36px 40px 48px; max-width: 720px; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: #999; cursor: pointer;
+      margin-bottom: 28px; text-decoration: none;
+      border: none; background: none; padding: 0;
+    }
+    .back-btn:hover { color: #333; }
+    .art-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #999; margin-bottom: 8px; }
+    .art-header-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; line-height: 1.25; color: #111; margin-bottom: 10px; }
+    .art-byline { font-size: 12px; color: #aaa; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid #e8e8e6; }
+    .art-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 600; color: #111;
+      margin: 28px 0 10px;
+    }
+    .art-body p { font-size: 15px; color: #222; line-height: 1.75; margin-bottom: 14px; }
+    .art-body em { font-style: italic; color: #555; }
+    .art-footer {
+      margin-top: 36px; padding-top: 20px;
+      border-top: 1px solid #e8e8e6;
+      font-size: 12px; color: #aaa; font-style: italic;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      background: #fff; border-top: 1px solid #e0e0de;
+      padding: 14px 28px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .site-footer span { font-size: 12px; color: #bbb; }
+    .site-footer nav a { font-size: 12px; color: #999; }
+  </style>
+</head>
+<body>
+
+<div class="site">
+
+  <!-- ── Nav ── -->
+  <header class="topbar">
+    <a href="#" class="logo" onclick="showHome()">Ký ức điện tử <span>/ Review game thế hệ đầu</span></a>
+    <nav>
+      <ul>
+        <li><a href="#" class="active" onclick="showHome()">Trang chủ</a></li>
+        <li><a href="#">PC / DOS</a></li>
+        <li><a href="#">Console</a></li>
+        <li><a href="#">Danh sách game</a></li>
+        <li><a href="#">Về trang này</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════
+       HOME VIEW
+  ════════════════════════════ -->
+  <div id="view-home" class="view active">
+
+    <!-- Featured -->
+    <div class="hero" onclick="showArticle('grandia')">
+      <div>
+        <div class="hero-label">Bài viết nổi bật</div>
+        <div class="hero-title">Grandia II — Khi một JRPG dám đặt câu hỏi về đức tin</div>
+        <div class="hero-sub">Review đầy đủ · Dreamcast / PS2 · 2000 · Game Arts</div>
+      </div>
+      <div class="hero-thumb t-grandia" style="background:#1a1030;">
+        <span style="color:#c8b4e0;font-family:'Playfair Display',serif;font-size:11px;font-weight:600;text-align:center;line-height:1.4;padding:6px;">GRANDIA<br>II</span>
+      </div>
+    </div>
+
+    <div class="body">
+      <main class="main">
+        <div class="section-label">Bài viết mới nhất</div>
+
+        <div class="article-card" onclick="showArticle('grandia')">
+          <div class="thumb t-grandia"><span class="thumb-inner">GRANDIA<br>II</span></div>
+          <div>
+            <div class="art-meta-top"><span class="badge b-dc">Dreamcast</span><span class="badge b-ps1">PS1</span>2000</div>
+            <div class="art-title">Grandia II — Khi một tựa JRPG dám đặt câu hỏi về đức tin</div>
+            <div class="art-excerpt">Hệ thống chiến đấu IP và câu chuyện về đức tin lung lay — lý do Grandia II vẫn còn đáng nhớ sau hơn hai thập kỷ.</div>
+            <div class="art-meta-bot"><span class="art-date">20 tháng 6, 2025</span><span class="rating">★★★★★</span></div>
+          </div>
+        </div>
+
+        <div class="article-card" onclick="showArticle('freedom')">
+          <div class="thumb t-freedom"><span class="thumb-inner">FREEDOM<br>FIGHTERS</span></div>
+          <div>
+            <div class="art-meta-top"><span class="badge b-pc">PC</span><span class="badge b-xbox">Xbox</span>2003</div>
+            <div class="art-title">Freedom Fighters — Tựa game đáng lẽ phải có phần hai</div>
+            <div class="art-excerpt">IO Interactive trước Hitman nổi tiếng đã làm ra một trong những squad tactics hay nhất thế hệ — và thế giới gần như bỏ qua nó.</div>
+            <div class="art-meta-bot"><span class="art-date">18 tháng 6, 2025</span><span class="rating">★★★★☆</span></div>
+          </div>
+        </div>
+
+        <div class="article-card" onclick="showArticle('blade')">
+          <div class="thumb t-blade"><span class="thumb-inner">BLADE<br>& SWORD</span></div>
+          <div>
+            <div class="art-meta-top"><span class="badge b-pc">PC</span>2002</div>
+            <div class="art-title">Blade & Sword — Khi Trung Quốc tự làm Diablo của riêng mình</div>
+            <div class="art-excerpt">Một studio non trẻ Trung Quốc, một tham vọng lớn, và hệ thống combo kung-fu mà Diablo không có. Kết quả thú vị hơn bạn nghĩ.</div>
+            <div class="art-meta-bot"><span class="art-date">15 tháng 6, 2025</span><span class="rating">★★★☆☆</span></div>
+          </div>
+        </div>
+
+        <div class="article-card" onclick="showArticle('amadis')">
+          <div class="thumb t-amadis"><span class="thumb-inner">LORD OF<br>BEAST</span></div>
+          <div>
+            <div class="art-meta-top"><span class="badge b-pc">PC</span>2002 · Đài Loan</div>
+            <div class="art-title">The Lord of Beast: Chronicle of Amadis — Viên ngọc không ai biết tên</div>
+            <div class="art-excerpt">Một con máy tàng của dì, một đêm mưa, và một trò chơi tiếng Trung tớ chẳng đọc nổi chữ nào — vậy mà in sâu hơn mọi game bây giờ.</div>
+            <div class="art-meta-bot"><span class="art-date">12 tháng 6, 2025</span><span class="rating">★★★★☆</span></div>
+          </div>
+        </div>
+
+        <div class="article-card" onclick="showArticle('seal')">
+          <div class="thumb t-seal"><span class="thumb-inner">SEAL<br>OF EVIL</span></div>
+          <div>
+            <div class="art-meta-top"><span class="badge b-pc">PC</span>2004 · Trung Quốc</div>
+            <div class="art-title">Seal of Evil — Trung Hoa thời Chiến Quốc, dưới góc nhìn của một nữ chiến binh</div>
+            <div class="art-excerpt">Prequel của một game ít người biết, với hệ thống Ngũ Hành là trung tâm — đây là Diablo clone có bản sắc riêng hiếm thấy.</div>
+            <div class="art-meta-bot"><span class="art-date">10 tháng 6, 2025</span><span class="rating">★★★☆☆</span></div>
+          </div>
+        </div>
+
+        <div class="article-card" onclick="showArticle('fable')">
+          <div class="thumb t-fable"><span class="thumb-inner">FABLE<br>2004</span></div>
+          <div>
+            <div class="art-meta-top"><span class="badge b-xbox">Xbox</span>2004</div>
+            <div class="art-title">Fable — Tựa game tớ thuộc lòng trước khi được chơi</div>
+            <div class="art-excerpt">Gần hai năm chỉ được "chơi" Fable qua mấy trang báo Thế Giới Game — rồi một mùa hè lớp 10 đổi lại tất cả.</div>
+            <div class="art-meta-bot"><span class="art-date">8 tháng 6, 2025</span><span class="rating">★★★★★</span></div>
+          </div>
+        </div>
+
+      </main>
+
+      <aside class="sidebar">
+        <div class="sb-section">
+          <div class="sb-label">Được đọc nhiều nhất</div>
+          <div class="sb-item"><span class="sb-num">1</span><div><div class="sb-text">Grandia II</div><div class="sb-platform">Dreamcast · 2000</div></div></div>
+          <div class="sb-item"><span class="sb-num">2</span><div><div class="sb-text">Fable</div><div class="sb-platform">Xbox · 2004</div></div></div>
+          <div class="sb-item"><span class="sb-num">3</span><div><div class="sb-text">Freedom Fighters</div><div class="sb-platform">PC / Xbox · 2003</div></div></div>
+          <div class="sb-item"><span class="sb-num">4</span><div><div class="sb-text">Lord of Beast: Amadis</div><div class="sb-platform">PC · 2002</div></div></div>
+          <div class="sb-item"><span class="sb-num">5</span><div><div class="sb-text">Seal of Evil</div><div class="sb-platform">PC · 2004</div></div></div>
+        </div>
+        <div class="sb-section">
+          <div class="sb-label">Theo nền tảng</div>
+          <div class="tag-row">
+            <a href="#" class="tag">DOS / Win 9x</a>
+            <a href="#" class="tag">NES</a>
+            <a href="#" class="tag">SNES</a>
+            <a href="#" class="tag">PS1</a>
+            <a href="#" class="tag">N64</a>
+            <a href="#" class="tag">Dreamcast</a>
+            <a href="#" class="tag">Xbox</a>
+            <a href="#" class="tag">PC</a>
+          </div>
+        </div>
+        <div class="sb-section">
+          <div class="sb-label">Theo thể loại</div>
+          <div class="tag-row">
+            <a href="#" class="tag">JRPG</a>
+            <a href="#" class="tag">Action RPG</a>
+            <a href="#" class="tag">Strategy RPG</a>
+            <a href="#" class="tag">Shooter</a>
+            <a href="#" class="tag">Platformer</a>
+            <a href="#" class="tag">Puzzle</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+       ARTICLE VIEWS
+  ════════════════════════════ -->
+
+  <!-- Grandia II -->
+  <div id="view-grandia" class="view">
+    <div style="padding:0;background:#f2f2f0;">
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=IM+Fell+English:ital@0;1&display=swap');
+      .lw{background:#2a1f14;border-radius:3px;border:2px solid #6b4a28;box-shadow:inset 0 0 40px rgba(0,0,0,.5),4px 4px 0 #1a1008,8px 8px 0 #0f0804;overflow:hidden;position:relative;margin:28px auto;max-width:900px;}
+      .lw::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(23deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px),repeating-linear-gradient(-23deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:0;}
+      .lw .li{position:relative;z-index:1;}
+      .lw .pg{background:#f2ece0;margin:14px;border-radius:2px;border:1px solid #c4a87a;box-shadow:inset 0 0 20px rgba(100,70,30,.08),0 2px 8px rgba(0,0,0,.4);overflow:hidden;position:relative;}
+      .lw .pg::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(150,110,60,.05) 24px,rgba(150,110,60,.05) 25px);pointer-events:none;z-index:0;}
+      .lw .pg::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle at top right,rgba(160,110,40,.1),transparent 70%);pointer-events:none;z-index:0;}
+      .lw .pgi{position:relative;z-index:1;}
+      .lw .ph{border-bottom:2px double #8a6030;padding:28px 32px 20px;text-align:center;}
+      .lw .ey{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#7a5020;margin-bottom:16px;}
+      .lw .gtr{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:10px;}
+      .lw .gtm{font-family:'Playfair Display',serif;font-size:50px;font-weight:700;color:#1e1208;line-height:1;letter-spacing:-1px;}
+      .lw .gtii{font-family:'Playfair Display',serif;font-size:34px;font-weight:400;font-style:italic;color:#5a2e08;letter-spacing:2px;}
+      .lw .ps1{font-family:'IM Fell English',serif;font-size:14px;font-style:italic;font-weight:700;color:#3a1e08;margin-top:8px;}
+      .lw .ps2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;font-style:italic;color:#3a1e08;margin-top:3px;line-height:1.3;}
+      .lw .ho{margin-top:14px;color:#8a6030;font-size:11px;letter-spacing:10px;opacity:.6;}
+      .lw .pb{padding:24px 36px 28px;}
+      .lw .back{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#7a5020;cursor:pointer;margin:16px 0 0 36px;border:none;background:none;font-family:'Inter',sans-serif;padding:0;}
+      .lw .back:hover{color:#3a1e08;}
+      .lw p.bp{font-family:'IM Fell English',serif;font-size:14.5px;line-height:1.9;color:#1e1208;margin-bottom:14px;text-align:justify;hyphens:auto;}
+      .lw p.bp em{color:#5a2e08;}
+      .lw p.bp.dc::first-letter{float:left;font-family:'Playfair Display',serif;font-size:60px;font-weight:700;line-height:.76;margin:5px 8px 0 0;color:#5a2e08;}
+      .lw h2.bh{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#2a1608;text-align:center;margin:22px 0 10px;}
+      .lw h2.bh::before{content:'§ ';color:#8a6030;}
+      .lw .do{text-align:center;color:#8a6030;margin:18px 0;display:flex;align-items:center;gap:10px;}
+      .lw .do::before,.lw .do::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,#a07840,transparent);}
+      .lw .an{background:#ddd0b8;border-left:3px solid #8a6030;border-radius:0 2px 2px 0;margin:18px 0;padding:12px 16px 12px 20px;}
+      .lw .an p{font-family:'IM Fell English',serif;font-style:italic;font-size:13.5px;line-height:1.75;color:#2a1a08;margin:0;}
+      .lw .imf{border:2px solid #8a6030;border-radius:2px;margin:18px 0;overflow:hidden;}
+      .lw .imf img{width:100%;display:block;}
+      .lw .imf .ig{display:grid;grid-template-columns:1fr 1fr;}
+      .lw .imf .ig img{width:100%;display:block;}
+      .lw .imc{padding:6px 12px;font-family:'IM Fell English',serif;font-style:italic;font-size:11px;color:#5a3a10;text-align:center;border-top:1px solid #a08050;background:#cec0a0;}
+      .lw .rs{width:88px;height:88px;border-radius:50%;background:#2a1608;border:2px solid #8a6030;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:20px auto 0;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+      .lw .rs .rl{font-family:'Inter',sans-serif;font-size:7px;text-transform:uppercase;letter-spacing:.1em;color:#8a6030;}
+      .lw .rs .rr{color:#f0a020;font-size:12px;letter-spacing:2px;margin-top:2px;}
+      .lw .pf{border-top:2px double #8a6030;padding:8px 20px;display:flex;justify-content:space-between;align-items:center;background:#e0d5bc;}
+      .lw .pft{font-family:'IM Fell English',serif;font-style:italic;font-size:11px;color:#6b4a20;}
+      .lw .pfb{font-family:'Inter',sans-serif;font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#4a2e08;background:#c4a870;border:1px solid #8a6030;padding:2px 8px;border-radius:1px;}
+      .lw .sf{padding:20px 36px 28px;border-top:1px solid #c4a87a;}
+      .lw .sf p{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:#5a3a10;margin-bottom:14px;line-height:1.6;}
+      .lc2{position:absolute;width:28px;height:28px;border-color:#6b4a28;border-style:solid;z-index:2;}
+      .lc2.tl{top:6px;left:6px;border-width:2px 0 0 2px;}
+      .lc2.tr{top:6px;right:6px;border-width:2px 2px 0 0;}
+      .lc2.bl{bottom:6px;left:6px;border-width:0 0 2px 2px;}
+      .lc2.br{bottom:6px;right:6px;border-width:0 2px 2px 0;}
+    </style>
+
+    <div class="lw">
+      <div class="lc2 tl"></div><div class="lc2 tr"></div>
+      <div class="lc2 bl"></div><div class="lc2 br"></div>
+      <div class="li">
+        <div class="pg">
+          <div class="pgi">
+
+            <button class="back" onclick="showHome()">← Trang chủ</button>
+
+            <div class="ph">
+              <div class="ey">Game Arts · Dreamcast 2000 · JRPG</div>
+              <div class="gtr">
+                <span class="gtm">Grandia</span>
+                <span class="gtii">II</span>
+              </div>
+              <div class="ps1">Khi một tựa JRPG dám</div>
+              <div class="ps2">đặt câu hỏi về đức tin</div>
+              <div class="ho">✦ ✦ ✦</div>
+            </div>
+
+            <div class="pb">
+
+              <div class="imf" style="margin-bottom:20px;"><img src="grandia-cover.jpg" alt="Grandia II"></div>
+
+              <p class="bp dc">Chuyện bắt đầu từ ông anh hàng xóm.</p>
+
+              <p class="bp">Ảnh hơn tớ mấy tuổi, học trên tớ hai lớp, và sở hữu thứ quyền lực tối thượng của khu xóm thời đó: một cái máy tính chơi được game. Nhà ảnh là nơi tụi nhỏ trong xóm tụ tập mỗi chiều, và ảnh cai trị cái vương quốc đó bằng một nguyên tắc duy nhất — ai muốn chơi thì phải nghe ảnh giảng về game trước đã.</p>
+
+              <p class="bp">Mà khổ nỗi, ảnh mê JRPG. Còn tớ thì không.</p>
+
+              <p class="bp">Thời đó tớ đã thử vài game JRPG rồi bỏ ngang hết. Cái cơ chế vào trận, chọn "Attack" từ menu, rồi ngồi nhìn nhân vật tự đánh nhau — tớ thấy nó cứ sao sao. Game gì mà mình bấm xong rồi ngồi... xem? Thà ra chơi đá banh còn hơn.</p>
+
+              <p class="bp">Vậy mà Tết năm lớp 11, ảnh dúi vào tay tớ mấy cái đĩa: <em>"Grandia II. Chơi thử đi. Combat khác lắm, không phải loại mày ghét đâu."</em> Tớ cầm về chủ yếu vì nể — kiểu nể một người đã cho mình chơi ké máy tính suốt mấy năm — chứ trong đầu đã tính sẵn là cài lên, chơi độ một tiếng cho có, rồi qua nhà ảnh trả lời "ừ cũng được" cho xong chuyện.</p>
+
+              <p class="bp">Kế hoạch đó sụp đổ hoàn toàn.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">"Combat khác lắm" — hóa ra ảnh không nói xạo</h2>
+
+              <p class="bp">Tớ nhớ trận đánh đầu tiên. Trên màn hình có một thanh ngang, mấy cái icon nhân vật chạy dọc theo nó, tới điểm "COM" thì dừng lại cho mình chọn lệnh, tới "ACT" thì mới thực sự ra đòn.</p>
+
+              <p class="bp">Ban đầu tớ tưởng nó chỉ là kiểu trang trí màu mè. Vài trận sau mới ngớ người ra: cái khoảng giữa COM và ACT đó chính là toàn bộ linh hồn của game.</p>
+
+              <p class="bp">Vì trong lúc kẻ địch đang "lấy đà" giữa hai điểm đó, mình có thể đấm nó một phát đủ mạnh — và icon của nó văng ngược trở lại. Đòn nó đang chuẩn bị tung ra? Hủy. Công sức nó chờ cả lượt? Bay màu. Game gọi đó là cancel, còn tớ hồi đó gọi là <em>"đấm cho mày quên bài"</em>.</p>
+
+              <div class="imf">
+                <div class="ig">
+                  <img src="grandia-combat-mareg.jpg" alt="Combat Mareg">
+                  <img src="grandia-combat-elena.jpg" alt="Combat Elena IP bar">
+                </div>
+                <div class="imc">Thanh IP góc phải màn hình — icon di chuyển từ WAIT qua COM đến ACT. Cancel đúng lúc là cả một nghệ thuật.</div>
+              </div>
+
+              <p class="bp">Và điều ngược lại cũng đúng — bọn địch cũng cancel được mình, nên mỗi trận đánh thành ra một màn đấu trí nho nhỏ: đánh sớm để chặn đòn nguy hiểm của nó, hay ráng chờ thêm một nhịp để tung đòn to hơn, chấp nhận rủi ro ăn đòn trước? Đánh boss trong Grandia II khó không phải vì nó trâu, mà vì lơ là một giây là trả giá liền.</p>
+
+              <div class="an"><p>Tết năm đó tớ ngồi lì trước màn hình từ sáng tới khuya. Mẹ kêu đi chúc Tết, tớ khất "con đánh xong con boss này đã" — và ai chơi JRPG rồi cũng biết, "con boss này" là một khái niệm có thể co giãn tới ba tiếng đồng hồ.</p></div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Càng chơi càng lún</h2>
+
+              <p class="bp">Điều tớ không ngờ là thứ giữ tớ lại không phải combat — mà là câu chuyện.</p>
+
+              <p class="bp">Bạn vào vai Ryudo, một Geohound — lính đánh thuê, việc gì cũng nhận miễn có tiền. Ryudo thuộc dạng nhân vật chính mà mở miệng ra là muốn... đấm: cộc cằn, mỉa mai, không tin thần thánh, không tin người, chắc cũng không tin luôn cả chính mình. Nhiệm vụ mở đầu nghe rất chi là thủ tục: hộ tống một cô ca sĩ thánh ca tên Elena của Giáo hội Granas đi dự một buổi lễ phong ấn.</p>
+
+              <p class="bp">Buổi lễ tất nhiên là toang — không toang thì lấy gì thành game. Elena bị một mảnh của Valmar, vị thần bóng tối trong truyền thuyết, xâm nhập vào người. Và từ trong cô trỗi dậy một nhân cách hoàn toàn khác: Millenia — lộng lẫy, nguy hiểm, và trái ngược với Elena từng centimet.</p>
+
+              <div class="imf">
+                <img src="grandia-artwork.jpg" alt="Grandia II — artwork nhân vật">
+                <div class="imc">Ryudo, Elena, Millenia và đồng đội — artwork chính thức</div>
+              </div>
+
+              <p class="bp">Từ đó, mỗi vùng đất Ryudo đi qua đều mang một vết thương riêng — một ngôi làng có chuyện kỳ lạ với đồ ăn, một đứa trẻ nhìn thấy những thứ không nên thấy, một hiệp sĩ hiền lành bỗng hóa khát máu. Game không vội. Nó thả từng mảnh cho mình tự ghép, tự nghi ngờ. Và đến khi mình tưởng đã hiểu hết mọi thứ, nó lật bàn: nếu phe "thiện" trong câu chuyện không hề thiện như Giáo hội vẫn rao giảng thì sao? Đức tin còn nghĩa lý gì khi cái nền của nó bắt đầu lung lay?</p>
+
+              <p class="bp">Câu hỏi đó, với một thằng nhóc lớp 11 đang nghỉ Tết, là hơi quá tầm. Nhưng cũng chính vì thế mà nó ở lại trong đầu tớ lâu đến vậy.</p>
+
+              <div class="an"><p>Đoạn Mareg hy sinh — tớ buồn thật sự, kiểu buồn ngồi thừ ra trước màn hình, vì cái nhân vật tưởng chỉ là "gã thú nhân to xác ồn ào" ở đầu game hóa ra lại là người tớ quý nhất đội.</p></div>
+
+              <p class="bp">Đoạn ngôi làng có đứa trẻ bị mảnh Valmar chiếm hữu — không cutscene hoành tráng, không nhạc dâng trào, chỉ là thoại, rồi im lặng, rồi tớ ngồi một lúc mới bấm tiếp được. Và đoạn về Melfice, anh trai của Ryudo — thôi, đoạn này tớ không kể. Ai chơi rồi sẽ hiểu. Ai chưa chơi thì càng nên giữ nguyên để tự trải nghiệm.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Nhìn lại sau hơn hai mươi năm</h2>
+
+              <p class="bp">Sau này tớ mới biết Grandia II là con cưng của Game Arts — studio Nhật từng làm series Lunar lừng danh <em>(game đó cũng hay lắm, tớ sẽ kể vào một dịp khác)</em>. Grandia phần đầu ra năm 1997 trên Sega Saturn, ấm áp, lạc quan, bán rất chạy ở Nhật. Đến phần hai, họ quyết định đi ngược hoàn toàn: tối hơn, trưởng thành hơn, và là phần đầu tiên dùng đồ họa 3D toàn phần.</p>
+
+              <p class="bp">Trên Dreamcast năm 2000, đây là một trong những JRPG đẹp nhất thời điểm đó. Có một chuyện hơi buồn cười là bản port PS2 ra sau lại tệ hơn bản gốc — texture xấu hơn, giật hơn — nên nếu giờ bạn muốn chơi, cứ nhắm thẳng bản Anniversary Edition trên Steam, được remaster từ bản Dreamcast xịn.</p>
+
+              <p class="bp">Còn một điểm trừ tớ phải nói cho công bằng: về cuối game, một số skill max cấp mạnh đến mức phá luôn cái hay của hệ thống combat. Cả game bắt mình tính toán từng nhịp, xong tự dưng đưa cho mình cây búa tạ đập tan mọi tính toán. Hơi tiếc — nhưng chắc lúc đó thằng nhóc lớp 11 cũng chẳng phàn nàn gì, có búa tạ thì cứ quất thôi.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Vĩ thanh</h2>
+
+              <p class="bp">Ra Tết, tớ qua nhà trả đĩa. Ông anh hàng xóm hỏi đúng một câu: <em>"Thấy chưa?"</em> — với cái mặt của người biết trước kết quả từ ba tuần trước.</p>
+
+              <p class="bp">Tớ không nhớ mình trả lời gì. Chắc là cố nói kiểu bâng quơ "ừ cũng hay" để đỡ quê. Nhưng cả hai đứa đều biết là tớ vừa mất nguyên một cái Tết cho game của ảnh — và đó là một trong những cái Tết đáng nhớ nhất thời đi học của tớ.</p>
+
+              <p class="bp">Giờ mỗi lần thấy Grandia II trên Steam, tớ lại nhớ ảnh. Không biết ảnh còn nhớ mình từng dúi mấy cái đĩa đó vào tay thằng nhóc hàng xóm không. Chắc là không. Người gieo thường quên, chỉ người nhận là nhớ.</p>
+
+              <div class="rs">
+                <span class="rl">Đánh giá</span>
+                <span class="rr">★★★★★</span>
+              </div>
+
+            </div>
+
+            <div class="sf">
+              <div class="imf" style="margin-bottom:16px;"><img src="grandia-endcard.jpg" alt="Grandia II HD Edition"></div>
+              <p>Grandia II Anniversary Edition hiện có trên Steam và GOG. Bản Nintendo Switch trong Grandia HD Collection cũng ổn nếu bạn thích chơi trên máy cầm tay. Còn nếu bạn có một đứa em hàng xóm nào đó chưa biết chơi gì Tết này — bạn biết phải làm gì rồi đó.</p>
+              <iframe src="https://store.steampowered.com/widget/330390/" frameborder="0" width="100%" height="190" style="display:block;border-radius:4px;border:1px solid #8a6030;"></iframe>
+            </div>
+
+            <div class="pf">
+              <span class="pft">Ký ức điện tử</span>
+              <span class="pfb">Dreamcast · 2000</span>
+              <span class="pft">Game Arts</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+
+  <!-- Freedom Fighters -->
+  <div id="view-freedom" class="view">
+    <div class="article-view">
+      <button class="back-btn" onclick="showHome()">← Trang chủ</button>
+      <div class="art-eyebrow"><span class="badge b-pc">PC</span><span class="badge b-xbox">Xbox</span> · Squad Tactics · IO Interactive · 2003</div>
+      <h1 class="art-header-title">Freedom Fighters — Tựa game đáng lẽ phải có phần hai</h1>
+      <div class="art-byline">18 tháng 6, 2025 · <span style="color:#f0a020;">★★★★☆</span></div>
+      <div class="art-body">
+        <h2>IO Interactive trước khi có Hitman nổi tiếng</h2>
+        <p>Với nhiều người, IO Interactive là cái tên gắn liền với Agent 47 và series Hitman. Nhưng ít ai nhớ rằng trước khi Hitman trở thành thương hiệu toàn cầu, studio Đan Mạch này đã cho ra đời một tựa game hoàn toàn khác — và theo nhiều người, hay hơn cả những gì họ đã làm sau đó.</p>
+        <p>IO Interactive được thành lập năm 1998 tại Copenhagen và tựa game đầu tiên của họ là Hitman: Codename 47 vào năm 2000. Thay vì đi thẳng vào phần tiếp theo, họ chọn hợp tác với EA Games để phát triển Freedom Fighters — ra mắt vào tháng 10 năm 2003 trên PS2, Xbox, GameCube và PC.</p>
+        <h2>Câu chuyện — một thế giới quen mà không quen</h2>
+        <p>Freedom Fighters không đặt bạn vào một thế giới fantasy hay tương lai xa. Bối cảnh của nó là New York City — nhưng không phải New York bạn biết. Game khai thác một lịch sử thay thế: Liên Xô trở thành siêu cường thế giới sau khi giành chiến thắng trong Thế chiến II, và trong thời điểm hiện tại của game, họ đã tiến hành xâm lược và chiếm đóng New York.</p>
+        <p>Bạn vào vai Christopher Stone — một thợ sửa ống nước bình thường, không phải siêu chiến binh. Chỉ là một người bình thường bị đẩy vào một tình huống vượt ngoài tầm kiểm soát, rồi từng bước trở thành người lãnh đạo của phong trào kháng chiến.</p>
+        <h2>Lối chơi — squad tactics khi khái niệm này còn mới</h2>
+        <p>Đây là phần mà Freedom Fighters thực sự tỏa sáng. Trong khi các game PC như Ghost Recon đã thử nghiệm khái niệm squad tactics trước đó, Freedom Fighters là tựa game đưa cơ chế này ra đại chúng và làm cho nó hoạt động một cách tự nhiên, trực quan. Bạn không quản lý quân đội qua menu phức tạp — bạn chiến đấu cùng họ, ra lệnh bằng một nút bấm đơn giản.</p>
+        <p>Hệ thống Charisma là trung tâm của toàn bộ trải nghiệm. Càng hoàn thành nhiều mục tiêu, thanh Charisma càng cao, và bạn có thể dẫn theo càng nhiều chiến binh — ở đỉnh điểm là 12 người. Vấn đề duy nhất: game quá ngắn. Khi bạn vừa thực sự chìm vào nhịp điệu của game, credits đã bắt đầu chạy.</p>
+        <h2>Ký ức mờ nhạt — nhưng vẫn còn đó</h2>
+        <p>Mình không còn nhớ rõ Freedom Fighters như những game khác từ thời kỳ đó. Không nhớ tên nhân vật phụ, không nhớ cụ thể từng màn — nhưng có một thứ vẫn còn lưu lại: cảm giác khi lần đầu ra lệnh cho cả một đội chiến đấu cùng mình, nhìn họ tản ra hai bên, tìm điểm nấp, và phối hợp theo đúng ý muốn.</p>
+        <p>Năm 2003, đó là thứ gì đó khác hoàn toàn so với những gì game thường làm. Freedom Fighters xứng đáng được nhớ đến nhiều hơn mức nó được nhớ đến. Và phần hai xứng đáng tồn tại.</p>
+      </div>
+      <div class="art-footer"><em>Freedom Fighters hiện có mặt trên Steam, GOG và Epic Games Store.</em></div>
+    </div>
+  </div>
+
+  <!-- Blade & Sword -->
+  <div id="view-blade" class="view">
+    <div class="article-view">
+      <button class="back-btn" onclick="showHome()">← Trang chủ</button>
+      <div class="art-eyebrow"><span class="badge b-pc">PC</span> · Action RPG · Pixel Studio · 2002 · Trung Quốc</div>
+      <h1 class="art-header-title">Blade & Sword — Khi Trung Quốc tự làm Diablo của riêng mình</h1>
+      <div class="art-byline">15 tháng 6, 2025 · <span style="color:#f0a020;">★★★☆☆</span></div>
+      <div class="art-body">
+        <h2>Một studio non trẻ, một tham vọng lớn</h2>
+        <p>Đầu những năm 2000, thị trường game action RPG đang bị Diablo II của Blizzard thống trị hoàn toàn. Hầu hết các studio phương Tây đều cố gắng bắt chước công thức đó — và không ít thất bại. Ít ai ngờ rằng một trong những nỗ lực thú vị nhất lại đến từ một studio nhỏ ở Trung Quốc tên Pixel Studio.</p>
+        <p>Publisher Whiptail Interactive đã tìm đến Trung Quốc để tìm kiếm những dự án có tiềm năng, và Blade & Sword là thứ họ tìm được: một game action RPG đặt trong bối cảnh Trung Hoa cổ đại, cố gắng kết hợp lối chơi Diablo với hệ thống chiến đấu kung-fu. Kết quả không hoàn hảo — nhưng thú vị hơn nhiều so với những gì người ta mong đợi từ một studio lần đầu ra mắt.</p>
+        <h2>Lối chơi — Diablo mặc áo võ lâm</h2>
+        <p>Về cơ bản Blade & Sword là isometric action RPG theo phong cách Diablo — bạn di chuyển qua 40 màn, tiêu diệt kẻ địch, nhặt đồ và nâng cấp nhân vật. Nhưng hệ thống combo là điểm sáng rõ nhất: mỗi nhân vật có 12 đòn kung-fu riêng biệt và 4 Super Attack được kích hoạt bằng thao tác chuột. Người chơi có thể kết hợp các đòn tấn công để tạo ra những chuỗi combo tùy chỉnh của riêng mình.</p>
+        <p>Điểm yếu thì cũng rõ: mỗi nhân vật dù bắt đầu khác nhau đều phát triển ra các skill tương tự nhau vào cuối game, làm giảm đi động lực chơi lại. Và bản dịch tiếng Anh — như nhiều game Trung Quốc thời đó — rõ ràng đã qua một lần dịch không mấy kỹ lưỡng.</p>
+        <h2>Ký ức mờ nhạt — nhưng còn đó cái gì đó</h2>
+        <p>Blade & Sword là loại game bạn chơi vì không còn gì khác để chơi — và rồi bị cuốn hơn mong đợi. Cái cảm giác làm chủ một chuỗi combo kung-fu trong thể loại vốn chỉ quen với click-spam là thứ mình không tìm thấy ở nhiều game khác thời điểm đó. Với những ai đã lớn lên với game Trung Hoa cổ trang đầu những năm 2000, Blade & Sword là một mảnh ký ức nhỏ nhưng đáng nhớ.</p>
+      </div>
+      <div class="art-footer"><em>Blade & Sword hiện có mặt trên Steam với mức giá rất rẻ.</em></div>
+    </div>
+  </div>
+
+  <!-- Amadis -->
+  <div id="view-amadis" class="view">
+    <div style="padding:0;background:#f2f2f0;">
+    <div class="lw">
+      <div class="lc2 tl"></div><div class="lc2 tr"></div>
+      <div class="lc2 bl"></div><div class="lc2 br"></div>
+      <div class="li">
+        <div class="pg">
+          <div class="pgi">
+
+            <button class="back" onclick="showHome()">← Trang chủ</button>
+
+            <div class="ph">
+              <div class="ey">Dynasty International · PC 2002 · Đài Loan · SRPG</div>
+              <div class="gtr">
+                <span class="gtm">Lord of Beast</span>
+              </div>
+              <div class="ps1">Chronicle of Amadis —</div>
+              <div class="ps2">Viên ngọc không ai biết tên</div>
+              <div class="ho">✦ ✦ ✦</div>
+            </div>
+
+            <div class="pb">
+
+              <div class="imf" style="margin-bottom:20px;"><img src="lob-cover.jpg" alt="The Lord of Beast — cover"></div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Trời đang mưa</h2>
+
+              <p class="bp dc">Lúc gõ những dòng này, ngoài trời đang mưa. Trong tai nghe, Apple Music shuffle trúng bài "Mưa" của Thùy Chi bản M4U — cái giai điệu buồn buồn cũ cũ ấy. Và không hiểu sao, chỉ cần bấy nhiêu đó thôi, tớ bị kéo tuột về hơn hai mươi năm trước, về một đêm cũng mưa rả rích, một thằng nhóc cấp 2 ngồi trước con máy tính tàng dì cho, dán mắt vào một trò chơi mà nó gần như không đọc nổi một chữ.</p>
+
+              <p class="bp">Trò đó tên The Lord of Beast: Chronicle of Amadis. Và tớ nghĩ rất ít người Việt từng nghe tên nó.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Con máy tàng của dì và một trò chơi không lời</h2>
+
+              <p class="bp">Tớ biết đến The Lord of Beast từ hồi còn nhỏ xíu, cấp 2. Máy thì là con máy cũ dì cho — thuộc dạng chạy được là mừng, đừng đòi hỏi gì thêm. Ông anh hàng xóm <em>(lại là ổng)</em> thì chơi bản trên máy nhà ổng. Sau này lên cấp 3, một thằng bạn thân của tớ cũng lây cái "bệnh" này, ôm con game đó chơi theo. Ba đứa, ba con máy khác nhau, chung một thế giới.</p>
+
+              <p class="bp">Mà chơi thời đó đúng nghĩa là <em>mò</em>. Game tiếng Trung xen tiếng Anh, mà vốn tiếng Anh của tớ hồi cấp 2 đếm được trên đầu ngón tay, còn tiếng Trung thì xí xa xí xô nhìn như hình vẽ. Thành ra cả quá trình chơi là một cuộc giải mã: bấm thử từng nút một rồi ghi nhớ. À, cái nút này là save. Cái này load lại lượt. Cái nút đỏ đỏ góc kia là quit — bấm nhầm một lần là nhớ đời.</p>
+
+              <p class="bp">Đồ đạc cũng đoán mò nốt. Thấy cái dép ghi "+2" thì tự suy ra chắc cộng 2 tốc độ. Cái áo "+5" chắc cộng giáp. Đúng sai gì tính sau, cứ gắn vô người rồi ra trận thử, thắng thì là đoán đúng, thua thì... load lại. Mà game này thì siêu khó — đúng chất SRPG cổ điển, một quyết định sai trên bản đồ chiến thuật là có thể phải chơi lại cả màn. Không có internet để tra, không có ai chỉ, chỉ có một thằng nhóc, một con máy tàng, và sự lì lợm của tuổi thơ.</p>
+
+              <p class="bp">Vậy mà tớ đánh tới tận end game.</p>
+
+              <p class="bp">Giờ nghĩ lại vẫn thấy hơi khó tin. Có lẽ chính vì hồi đó thiếu thốn đủ thứ — thiếu game, thiếu thông tin, thiếu cả khả năng đọc hiểu — mà mỗi thứ vớ được đều quý, đều được nhấm nháp tới tận cùng. Bây giờ game hay đầy rẫy, tải phát chơi liền, có walkthrough tận răng, vậy mà chẳng cái nào in sâu bằng cái trò không-lời tớ mò mẫm trong những đêm mưa đó.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Câu chuyện — cái mà tớ mãi sau này mới hiểu</h2>
+
+              <div class="an"><p>Phải thành thật: hồi nhỏ tớ chơi mà gần như không hiểu cốt truyện. Tiếng Trung không đọc được, tiếng Anh bập bõm, nên với tớ ngày đó game chỉ là "đánh nhau đẹp và khó". Cả phần dưới đây là tớ mãi sau này lục lại wiki tiếng Trung mới ghép ra được.</p></div>
+
+              <p class="bp">Bối cảnh là lục địa Amadis, nơi ba quốc gia chia nhau cát cứ: đế quốc quân sự Languedoque mạnh nhất lục địa, quốc gia thương mại Konquiem gồm nhiều thành bang hợp thành theo kiểu cộng hòa, và một giáo quốc nhỏ ở vùng biên. Đây là một thế giới người và ma thú sống song song — và một số ít người có khả năng giao tiếp, điều khiển ma thú, được gọi là "sứ giả ma thú", trở thành thứ vũ khí đáng sợ mà mọi thế lực quân sự đều thèm khát.</p>
+
+              <p class="bp">Câu chuyện bắt đầu bằng một cuộc xâm lược. Tướng Shaft của đế quốc Languedoque đem kỵ binh hạng nặng đánh vào Konquiem, bắt giam quốc vương và hoàng hậu. Công chúa Viora được đội trưởng cận vệ Orlando hộ tống chạy thoát khỏi hoàng thành, rồi bị quân đế quốc truy đuổi ráo riết ngoài đồng hoang — cho đến khi được một chàng trai vùng biên tên Rogue cứu. Từ đó cả nhóm dấn thân đi tìm nguyên nhân thật sự đằng sau cuộc xâm lược đột ngột, và bước lên con đường phục quốc.</p>
+
+              <p class="bp">Điều thú vị là bạn chọn chơi theo Rogue hay Viora, và hai tuyến tuy chung mạch chính nhưng khác nhau về sự kiện, đồng đội, tình tiết — nghe nói tuyến Viora khó hơn hẳn. Game động tới những chủ đề chẳng hề trẻ con: tình yêu và phản bội, cứu chuộc và cái chết, xung đột tôn giáo với thế tục. Nghĩ lại thấy hơi tiếc — hồi đó tớ cầm trên tay cả một thiên anh hùng ca mà chỉ mải mê xem hiệu ứng skill nổ đẹp cỡ nào.</p>
+
+              <div class="imf">
+                <img src="lob-chars.jpg" alt="Rogue và Viora">
+                <div class="imc">Hai tuyến nhân vật: nữ chính Viora và nam chính Rogue — chọn ai, câu chuyện rẽ khác.</div>
+              </div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Gameplay — dễ mến với thằng nhóc, nhưng không hề dễ dãi</h2>
+
+              <p class="bp">Về cơ bản đây là SRPG chiến thuật theo lượt: mỗi phe lần lượt điều quân trên bản đồ, đánh hết bên này tới bên kia, tới khi một phe bị xóa sổ hoặc đạt điều kiện thắng màn. Ai chơi Fire Emblem hay Tactics Ogre sẽ thấy quen tay ngay.</p>
+
+              <p class="bp">Nhưng The Lord of Beast có vài thứ của riêng nó. Thứ nhất là chiến đấu theo phương ngang — một góc nhìn ít gặp trong SRPG cùng thời, làm mấy pha giao tranh thêm phần dồn dập. Thứ hai, và là linh hồn của game: hệ thống ma thú tiến hóa. Ma thú cũng lên cấp qua từng trận, và bạn được chọn con nào sẽ tiến hóa, theo nhánh nào — quyết định đó định hình hình dạng lẫn sức mạnh tương lai của nó. Nghe nói có tới hàng trăm nhánh tiến hóa, và sau khi tiến hóa, ma thú còn liên kết thuộc tính với chủ nhân. Hồi nhỏ tớ nghịch cái này thuần theo bản năng — thấy con thú lớn lên, đổi hình là khoái — mà không hề biết mình đang đưa ra những lựa chọn ảnh hưởng cả game.</p>
+
+              <div class="imf">
+                <img src="lob-gameplay.jpg" alt="The Lord of Beast — bản đồ chiến thuật">
+                <div class="imc">Bản đồ chiến thuật isometric — và những dòng thoại tiếng Trung mà thằng nhóc năm đó chỉ biết đoán.</div>
+              </div>
+
+              <p class="bp">Và game khó. Khó thật sự. Đúng chất SRPG cổ điển: một nước đi sai trên bản đồ có thể kéo sập cả màn, mà mỗi màn chỉ lưu được một điểm save duy nhất giữa trận — sai là trả giá. Với một thằng nhóc không đọc nổi hướng dẫn, mỗi màn thắng được là một chiến công nhỏ. Tớ vẫn không hiểu bằng cách nào hồi đó mình lì tới mức đánh thông tới cuối.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Hình ảnh — 2.5D mà đẹp tới mức tớ nhớ tới giờ</h2>
+
+              <p class="bp">Cái níu tớ lại đầu tiên, và mạnh nhất, là hình ảnh. Tạo hình nhân vật đẹp một cách choáng váng với con mắt trẻ con thời đó — và tớ vẫn giữ nguyên ý kiến: đặt cạnh Fire Emblem: Sacred Stones trên GBA đang hot lúc bấy giờ, tớ thấy nét vẽ của The Lord of Beast còn nhỉnh hơn.</p>
+
+              <p class="bp">Sau này tớ mới biết game cố tình bỏ phong cách Nhật để theo thẩm mỹ phương Tây, lấy cảm hứng từ vùng cao nguyên Scotland, và dồn công sức vào nghiên cứu trang phục nhân vật lẫn chi tiết bối cảnh. Game dùng đồ họa 2.5D, và bản đồ chiến trường có cả hiệu ứng thời tiết động — mưa, mây, tuyết rơi ngay trong màn. Giờ nghĩ lại mới thấy rùng mình một cái trùng hợp: một game mà tớ luôn nhớ gắn với những đêm mưa, thì bản thân nó cũng có mưa rơi ngay trên chiến trường.</p>
+
+              <p class="bp">Skill thì ngầu khỏi bàn — mỗi lần tung chiêu là hiệu ứng nổ ì xèo, ánh sáng phủ kín màn hình. Với đứa nhóc mê game, chỉ riêng khoản trình diễn đó đã đủ để ngồi lì cả buổi tối.</p>
+
+              <div class="imf">
+                <div class="ig">
+                  <img src="lob-skill1.jpg" alt="Skill effect 1">
+                  <img src="lob-skill2.jpg" alt="Skill effect 2">
+                </div>
+                <div class="imc">Mỗi lần tung chiêu là ánh sáng phủ kín màn hình — thứ khiến thằng nhóc mê mẩn không rời mắt.</div>
+              </div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Và thứ ở lại lâu nhất: âm nhạc</h2>
+
+              <p class="bp">Nếu hình ảnh là thứ níu tớ lại lúc đầu, thì âm nhạc là thứ ở lại lâu nhất — lâu hơn cả cốt truyện tớ chẳng hiểu.</p>
+
+              <p class="bp">Nhạc trong The Lord of Beast do bộ phận âm nhạc của Hantang (Dynasty) soạn, chủ đạo là nhạc giao hưởng, phối để vẽ nên cái không khí Trung Cổ phương Tây vừa hùng tráng vừa u hoài. Mấy bản battle theme là thứ tớ nhớ rõ nhất — cái cảm giác vào trận, nhạc dồn lên, skill nổ tung tóe, tất cả khớp vào nhau thành một buổi trình diễn.</p>
+
+              <div class="an"><p>Đây cũng là điểm khiến game tuy vô danh mà lại có một di sản nho nhỏ: soundtrack của nó nổi tiếng trong cộng đồng game Hoa ngữ tới mức nhiều game làm bằng RPG Maker cuối những năm 2000 đã đi mượn nhạc của nó — nổi nhất là hai bản "Dance With Wind" và "Giant Killer". Cả một thế hệ người chơi từng nghe nhạc của The Lord of Beast mà không hề biết nó đến từ đâu.</p></div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Vì sao nó là hidden gem thật sự</h2>
+
+              <p class="bp">Có những game bị lãng quên vì dở. The Lord of Beast bị lãng quên vì một lý do buồn hơn: nó không có cơ hội. Không bản tiếng Anh chính thức, không phát hành rộng ra phương Tây, không marketing, không cửa hàng số nào bán lại. Nó ra đời ở một thị trường hẹp, bằng một thứ tiếng mà phần lớn thế giới không đọc được, rồi lặng lẽ biến mất.</p>
+
+              <p class="bp">Nếu nó sinh ra ở Nhật, được localize tử tế, biết đâu hôm nay người ta đã nhắc tên nó cùng mâm với Fire Emblem hay Tactics Ogre. Thay vào đó, nó chỉ còn sống trong ký ức của một nhóm nhỏ — mấy đứa nhóc Đài Loan, Trung Quốc, và vài thằng nhóc Việt Nam ngồi mò game trong đêm mưa như tớ.</p>
+
+              <p class="bp">Mà nói thật, chính vì hiếm, vì khó, vì không ai biết, mà nó mới quý đến vậy. Một viên ngọc nằm giữa đường thì ai cũng nhặt. Viên ngọc phải mò trong bùn, trong mưa, trong mấy dòng chữ không đọc nổi — mới là viên mình nhớ cả đời.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Vĩ thanh</h2>
+
+              <p class="bp">Bài "Mưa" của Thùy Chi vẫn đang ngân trong tai nghe. Ngoài trời mưa chưa dứt.</p>
+
+              <p class="bp">Ba đứa tụi tớ giờ mỗi người một phương — ông anh hàng xóm, thằng bạn thân, và tớ. Không biết còn ai nhớ cái game không tên tuổi mà tụi tớ từng chụm đầu vào giải mã không. Chắc là mờ nhạt hết rồi. Nhưng chỉ cần một đêm mưa, một giai điệu cũ, là tớ lại thấy mình mười mấy tuổi, ngồi trước con máy tàng của dì, đoán xem cái dép kia cộng mấy điểm tốc độ.</p>
+
+              <p class="bp">Có những trò chơi ta nhớ vì nó vĩ đại. Có những trò ta nhớ chỉ vì nó ở đó, đúng lúc, trong một đêm mưa. The Lord of Beast là loại thứ hai — và với tớ, loại thứ hai mới là loại ở lại lâu nhất.</p>
+
+              <div class="rs">
+                <span class="rl">Đánh giá</span>
+                <span class="rr">★★★★☆</span>
+              </div>
+
+            </div>
+
+            <div class="sf">
+              <p>The Lord of Beast: Chronicle of Amadis gần như không thể mua hợp pháp ở thời điểm này — không bản số, không tái phát hành. Nhưng nếu bạn tò mò muốn nhìn tận mắt cái thế giới tớ vừa kể, dưới đây là playlist gameplay đầy đủ. Cứ mở lên nghe thử nhạc — biết đâu bạn cũng nghe thấy tiếng mưa.</p>
+              <div style="position:relative;width:100%;padding-bottom:56.25%;height:0;border-radius:4px;overflow:hidden;border:1px solid #8a6030;">
+                <iframe src="https://www.youtube.com/embed/videoseries?list=PL1SC6rO_Guv-L7mruCZFjlSvQzvjaNAbL" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+              </div>
+            </div>
+
+            <div class="pf">
+              <span class="pft">Ký ức điện tử</span>
+              <span class="pfb">PC · 2002 · Đài Loan</span>
+              <span class="pft">Dynasty International</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Seal of Evil -->
+  <div id="view-seal" class="view">
+    <div class="article-view">
+      <button class="back-btn" onclick="showHome()">← Trang chủ</button>
+      <div class="art-eyebrow"><span class="badge b-pc">PC</span> · Action RPG · Object Software · 2004 · Trung Quốc</div>
+      <h1 class="art-header-title">Seal of Evil — Trung Hoa thời Chiến Quốc, dưới góc nhìn của một nữ chiến binh</h1>
+      <div class="art-byline">10 tháng 6, 2025 · <span style="color:#f0a020;">★★★☆☆</span></div>
+      <div class="art-body">
+        <h2>Prequel của một game mà chính nó cũng ít người biết</h2>
+        <p>Seal of Evil là một action RPG và là prequel của Prince of Qin — bản thân Prince of Qin cũng là một tựa game Trung Quốc ít được biết đến ở phương Tây. Nói cách khác, đây là prequel của một game vốn đã obscure. Nhưng đừng để điều đó làm bạn nản — Seal of Evil đứng vững hoàn toàn như một trải nghiệm độc lập.</p>
+        <h2>Câu chuyện — lịch sử và thần thoại đan xen</h2>
+        <p>Bối cảnh của game là những năm cuối của thời Chiến Quốc — giai đoạn hỗn loạn đánh dấu sự sụp đổ của nhà Chu. Từ trong đó nổi lên Doanh Chính — người sẽ trở thành Tần Thủy Hoàng — với tham vọng thống nhất Trung Hoa bằng bất kỳ giá nào. Bạn vào vai Lan Wei, một nữ chiến binh điều tra cái chết của cha mình và tìm kiếm kẻ thủ ác.</p>
+        <p>Cách game kết hợp nhân vật lịch sử có thật với yếu tố thần thoại dân gian tạo ra một bầu không khí riêng — đủ thực để có trọng lượng nhưng đủ huyền ảo để không bị gò bó vào sách giáo khoa.</p>
+        <h2>Lối chơi — Ngũ Hành là linh hồn của game</h2>
+        <p>Hệ thống Ngũ Hành — Kim, Mộc, Thủy, Hỏa, Thổ — là trung tâm của toàn bộ cơ chế chiến đấu và phát triển nhân vật. Thông qua việc vận dụng các tương quan ngũ hành, người chơi có thể cải thiện thuộc tính, nâng cấp kỹ năng, tăng sức mạnh trang bị, và thậm chí giải quyết một số câu đố trong game. Đây là thứ làm Seal of Evil khác với phần lớn Diablo clone cùng thời.</p>
+        <h2>Ký ức — một game chơi vì tò mò, nhớ vì hệ thống</h2>
+        <p>Seal of Evil là loại game bạn tìm đến vì tò mò về game Trung Quốc cổ trang, và ở lại vì hệ thống Ngũ Hành làm bạn muốn thử nghiệm. Không hoàn hảo, không nổi tiếng — nhưng là một tựa game có cá tính riêng trong một biển Diablo clone thiếu bản sắc.</p>
+      </div>
+      <div class="art-footer"><em>Seal of Evil hiện có mặt trên Steam.</em></div>
+    </div>
+  </div>
+
+  <!-- Fable -->
+  <div id="view-fable" class="view">
+    <div style="padding:0;background:#f2f2f0;">
+    <div class="lw">
+      <div class="lc2 tl"></div><div class="lc2 tr"></div>
+      <div class="lc2 bl"></div><div class="lc2 br"></div>
+      <div class="li">
+        <div class="pg">
+          <div class="pgi">
+
+            <button class="back" onclick="showHome()">← Trang chủ</button>
+
+            <div class="ph">
+              <div class="ey">Lionhead Studios · Xbox 2004 · Action RPG</div>
+              <div class="gtr">
+                <span class="gtm">Fable</span>
+              </div>
+              <div class="ps1">Tựa game tớ thuộc lòng</div>
+              <div class="ps2">trước khi được chơi</div>
+              <div class="ho">✦ ✦ ✦</div>
+            </div>
+
+            <div class="pb">
+
+              <div class="imf" style="margin-bottom:20px;"><img src="fable-cover.jpg" alt="Fable — poster"></div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Tờ báo mười nghìn và một giấc mơ tên Albion</h2>
+
+              <p class="bp dc">Trước khi chơi Fable, tớ đã "chơi" nó suốt gần hai năm — trên giấy.</p>
+
+              <p class="bp">Hồi lớp 8, lớp 9, tài sản quý nhất của tớ và ông anh hàng xóm <em>(vẫn là ổng, ông anh trong bài Grandia II ấy)</em> là mấy cuốn Thế Giới Game mười nghìn một cuốn — thời đó là cả một khoản đầu tư, nên mỗi cuốn được đọc kỹ tới mức gáy báo mòn ra. Trong một số báo năm đó có bài giới thiệu Fable — tựa game đang làm mưa làm gió trên Xbox, hệ máy mà cả cái xóm tớ không ai có. Nhà ổng có máy tính, nhưng Xbox thì chịu. Thế là hai anh em chỉ còn một cách duy nhất để "chơi" Fable: đọc.</p>
+
+              <p class="bp">Mà đọc thật. Đọc đi đọc lại tới mức thuộc lòng. Game gì mà nhân vật già đi theo thời gian. Game gì mà làm việc tốt thì mọc hào quang, làm việc xấu thì mọc sừng. Game gì mà cưới vợ mua nhà được. Hai đứa ngồi tưởng tượng đủ kiểu — nếu được chơi thì mày theo thiện hay ác, tao sẽ mua căn nhà ở đâu — như thể bàn chuyện chia đất ở một thế giới mà cả hai chưa từng đặt chân đến.</p>
+
+              <div class="imf">
+                <img src="fable-story.jpg" alt="Fable — đấu kiếm ở Albion">
+                <div class="imc">Albion — thế giới cổ tích Anh mà hai anh em từng chỉ được ngắm qua trang báo.</div>
+              </div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Lần chạm trán đầu tiên — và thất bại toàn tập</h2>
+
+              <p class="bp">Rồi Fable lên PC. Trời ơi cái ngày biết tin đó.</p>
+
+              <p class="bp">Vấn đề duy nhất: máy nhà ông anh thuộc dạng mà quạt kêu to hơn loa. Fable chạy trên đó theo đúng nghĩa "trình chiếu slide" — giật, nhòe, đơ đủ kiểu. Nhưng khát khao hai năm trời không cho phép hai đứa bỏ cuộc dễ vậy. Cứ lết. Giật cũng lết. Load năm phút cũng lết.</p>
+
+              <p class="bp">Cho đến một ngày game crash hẳn, không cứu được nữa. Hai anh em ngồi nhìn cái màn hình đen, không đứa nào nói gì. Kiểu im lặng của những người vừa bị đá khỏi thiên đường khi mới đi được nửa đường.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Hè lớp 10 — cuối cùng cũng đến Albion</h2>
+
+              <p class="bp">Chuyện đổi khác vào năm lớp 10, khi tớ vượt qua kỳ thi học kỳ với thành tích đủ để ba mẹ giữ lời hứa: mua cho một cái máy tính. Cái máy đó về sau gánh không biết bao nhiêu game — trong đó có cái Tết Grandia II mà tớ từng kể, nhưng đó là chuyện của mùa xuân năm sau — còn mùa hè đầu tiên này, nó thuộc về Fable.</p>
+
+              <p class="bp">Và mùa hè đó thuộc dạng hè đẹp nhất thời đi học của tớ. Ngày nào ông anh cũng qua. Hai đứa thay phiên — đứa cầm chuột, đứa ngồi cạnh chỉ đạo, mà thường chỉ đạo to mồm hơn người chơi. Thời đó làm gì có walkthrough, không Google, không YouTube — cả thế giới Albion là một tấm bản đồ trắng để hai đứa tự mò. Phát hiện ra mua được nhà: la làng. Phát hiện ra cưới được vợ: la làng to hơn. Phát hiện ra tặng quà nhiều thì dân làng đổ ầm ầm: cả hai cười muốn sập nhà.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Câu chuyện — bắt đầu bằng một ngày sinh nhật</h2>
+
+              <p class="bp">Fable mở đầu bằng một trong những màn dạo đầu đáng nhớ nhất thời đó. Bạn là một cậu nhóc ở làng Oakvale, đang lo chuyện rất trẻ con: kiếm vài đồng mua quà sinh nhật cho chị gái. Game cho bạn làm việc tốt hoặc việc xấu ngay từ những đồng tiền đầu tiên đó — trông coi hàng giúp người ta đàng hoàng, hay vừa trông vừa thó đồ.</p>
+
+              <p class="bp">Rồi ngay trong đêm đó, mọi thứ sụp đổ. Làng bị cướp tấn công, gia đình tan nát, và cậu nhóc được một Hero già cứu về Heroes Guild — nơi đào tạo anh hùng của Albion. Từ đây game nhảy qua nhiều năm: bạn lớn lên, học nghề, và bước ra thế giới với một mối thù âm ỉ chưa bao giờ tắt.</p>
+
+              <p class="bp">Cốt truyện Fable không dài, không nhiều twist chồng chéo — nhưng nó có đúng thứ một câu chuyện cổ tích đen cần: mất mát mở đầu, hành trình trưởng thành, và một kẻ thù xứng tầm mà tớ sẽ không nói tên. Hồi đó hai anh em chơi tới mấy đoạn hé lộ về quá khứ mà ngồi bàn tán như bàn phim truyền hình — "ê tao nghi con này chưa chết", "thằng đó chắc chắn có vấn đề". Có những đoạn nghi đúng, có những đoạn game lừa cho một cú đau điếng. Ai chưa chơi thì tớ giữ nguyên cái quyền được lừa đó cho bạn.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Thiện hay ác — và bí mật hai mươi năm</h2>
+
+              <p class="bp">Chính hệ thống thiện–ác của game suýt làm hai anh em... nghỉ chơi nhau. Ổng theo phe ác — <em>"chơi ác mới vui, mọc sừng nhìn ngầu"</em> — còn tớ thích thiện. Cãi nhau chí chóe mỗi lần tới lượt đứa này mà đứa kia đòi hướng khác.</p>
+
+              <div class="an"><p>Nhưng mà, máy của tớ mà. Nên ban ngày nhân vật sống hai mặt theo kiểu thỏa hiệp, còn tối đến, khi ổng về rồi, tớ lén mở game làm vài việc tốt — cho cái vòng hào quang trên đầu nó sáng lên. Nhìn cho đẹp. Ổng mà biết chắc từ mặt tớ luôn.</p></div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Ba con đường và những cục kẹo kinh nghiệm</h2>
+
+              <p class="bp">Hệ thống nhân vật của Fable gói trong ba chữ: Strength, Skill, Will — cơ bắp, thiện xạ, phép thuật. Nghe thì giống mọi RPG trên đời, nhưng cái khác nằm ở chỗ Fable không bắt bạn chọn class từ đầu rồi chịu trận tới cuối game. Đánh kiếm nhiều thì Strength lên, bắn cung nhiều thì Skill lên, xài phép nhiều thì Will lên — nhân vật thành ra đúng cái kiểu bạn chơi, chứ không phải cái ô bạn lỡ tick lúc tạo nhân vật.</p>
+
+              <p class="bp">Kinh nghiệm trong game hiện nguyên hình là mấy quả cầu xanh xanh nảy ra từ xác địch, kèm combat multiplier — đánh liên tục không dính đòn thì nhân hệ số, càng liều càng giàu kinh nghiệm. Đơn giản, trực quan, nhìn phát hiểu liền. Với hai thằng nhóc mà vốn tiếng Anh chủ yếu học từ... chính game, thì độ dễ tiếp cận đó là cứu tinh: không cần đọc hiểu bảng chỉ số dày như sách giáo khoa, cứ chơi là tự khắc mạnh lên theo hướng của mình.</p>
+
+              <div class="imf">
+                <img src="fable-combat.jpg" alt="Fable — combat hiệu ứng skill">
+                <div class="imc">Skill nổ ì xèo giữa đám đông — thứ khiến hai thằng nhóc ngồi lì cả buổi.</div>
+              </div>
+
+              <p class="bp">Và đó cũng là triết lý chung của cả game — kể cả hệ thống thiện–ác. Không có thanh đạo đức ẩn nào phải dò, không có bảng hệ quả nào phải tra. Làm việc tốt: dân làng vây quanh, đầu mọc hào quang. Làm việc xấu: ruồi bay quanh người, ai thấy cũng né. Đạo đức trong Fable không phải con số — nó hiện lên trên mặt nhân vật, và chính vì thấy được, sờ được nên nó mới khiến hai đứa nhóc cãi nhau hăng đến thế.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Đồ họa — lác mắt theo đúng nghĩa đen</h2>
+
+              <p class="bp">Năm đó, Fable đẹp tới mức tớ nhớ cảm giác đứng ở Oakvale lúc hoàng hôn mà không muốn bấm đi tiếp. Ánh sáng ấm như tranh vẽ, cây cối rợp bóng, cả Albion như bước ra từ sách cổ tích Anh — mà là bản sách in màu xịn. So với mặt bằng game cùng thời trên PC nhà tớ, Fable thuộc hạng "khoe với đứa khác trong xóm được". Đồ họa của nó không chạy theo tả thực, mà chạy theo chất cổ tích — và chính vì thế mà giờ nhìn lại vẫn không thấy lỗi thời như nhiều game "tả thực" cùng năm.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Demon Doors — mấy cánh cửa trời đánh</h2>
+
+              <div class="imf">
+                <img src="fable-demondoor.jpg" alt="Fable — Demon Door">
+                <div class="imc">"Oh, you really know how to treat a door." — mấy cánh cửa đá lắm mồm và oái oăm nhất Albion.</div>
+              </div>
+
+              <p class="bp">Rải rác khắp Albion là những cánh cửa đá biết nói, gọi là Demon Door. Mỗi cánh giữ một kho báu, và chỉ mở khi bạn làm đúng yêu cầu của nó — mà yêu cầu thì oái oăm đúng kiểu "ai nghĩ ra cái này chắc vui tính lắm": cánh thì đòi bạn ăn cho béo ú ra nó mới thèm nói chuyện, cánh thì bắt mặc đúng bộ đồ nó thích, cánh thì đòi chứng kiến một màn combat đủ đẹp, có cánh còn đòi... quà.</p>
+
+              <div class="an"><p>Giờ thì mấy cái này Google phát ra hết. Nhưng hè năm đó không có walkthrough, hai anh em đứng trước mỗi cánh cửa như đứng trước câu đố nhân sư — thử đủ trò, biểu cảm nào cũng diễn, đồ nào cũng thay. Có cánh mở được thì hét ầm nhà. Có cánh chịu chết, đánh dấu trong đầu, để đó "bữa nào quay lại tính sổ". Nghĩ lại, mấy cánh cửa trời đánh đó chiếm của hai đứa cả chục buổi chiều — và đó lại là những buổi chiều nhớ nhất.</p></div>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Nhìn lại sau hai mươi năm</h2>
+
+              <p class="bp">Sau này tớ mới biết đằng sau Fable là cả một câu chuyện dở khóc dở cười của làng game.</p>
+
+              <p class="bp">Cha đẻ của nó, Peter Molyneux của Lionhead Studios, là bậc thầy của môn "hứa trước quên sau". Từ năm 2001 ông đã tuyên bố Fable sẽ cách mạng hóa thể loại RPG — cây cối lớn lên theo thời gian thật, con cái nhân vật chính đóng vai trò trong cốt truyện, đủ thứ. Đến khi game ra năm 2004, một đống tính năng đó không tồn tại, và Molyneux phải đăng đàn xin lỗi công khai. Chuyện hiếm có trong ngành.</p>
+
+              <p class="bp">Nhưng cái hay là: dù thiếu những lời hứa đó, Fable vẫn bán hơn một triệu bản tuần đầu — vì bản thân game quá có duyên. Albion không rộng như lời đồn, nhưng nó <em>sống</em>: dân làng nhớ mặt bạn, trầm trồ khi bạn làm anh hùng, bỏ chạy khi bạn mọc sừng. Hai thằng nhóc cãi nhau chí chóe vì hướng thiện ác là bằng chứng sống cho thiết kế đó.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Còn bản Anniversary trên Steam thì sao?</h2>
+
+              <p class="bp">Đây là phần cho bạn nào muốn chơi Fable ngay hôm nay, vì bản gốc giờ khó kiếm rồi.</p>
+
+              <p class="bp">Fable Anniversary là bản remaster 2014, và số phận nó khá giống trò đùa: hình ảnh và âm thanh làm lại toàn bộ, hệ thống ánh sáng mới, texture mới — nghe ngon lành — nhưng lúc mới ra mắt, bản PC bị ném đá tơi bời vì menu không điều khiển được bằng chuột, không đổi được phím, tụt khung hình. Đúng chất game gắn với tuổi thơ tớ: lên PC lần nào cũng trầy trật lần đó.</p>
+
+              <p class="bp">Tin tốt là các bản patch sau đã sửa kha khá, và giờ game đang được đánh giá Very Positive trên Steam. Kinh nghiệm rút từ cộng đồng: <em>chơi bằng tay cầm</em> — game sinh ra cho Xbox, cắm controller vào là mọi phiền toái về điều khiển biến mất gần hết. Bản Anniversary cũng gồm sẵn toàn bộ nội dung The Lost Chapters, tức bản đầy đủ nhất của game. Được cái hay giảm giá sâu, canh sale mà múc.</p>
+
+              <p class="bp">Chấm nhanh bản Anniversary: đồ họa đẹp lên rõ, nội dung nguyên vẹn, điều khiển PC vẫn hơi khó chịu nếu dùng chuột phím. Nhưng để bước vào Albion hôm nay thì không có cửa nào tốt hơn.</p>
+
+              <div class="do">✦</div>
+              <h2 class="bh">Vĩ thanh</h2>
+
+              <p class="bp">Nghĩ lại, Fable có lẽ là game duy nhất mà tớ yêu theo đúng trình tự ngược đời: thuộc lòng trước, thất bại giữa chừng, rồi mới được chơi trọn vẹn. Gần hai năm chỉ được "chơi" qua mấy trang báo — có khi chính vì vậy mà mùa hè lớp 10 đó mới ngọt đến thế.</p>
+
+              <p class="bp">Ông anh hàng xóm giờ mà đọc được bài này, chắc sẽ biết luôn cái bí mật hai mươi năm: thằng em mày lén chơi thiện mỗi tối đó. Xin lỗi nha, nhưng cái vòng sáng đẹp thật mà.</p>
+
+              <div class="rs">
+                <span class="rl">Đánh giá</span>
+                <span class="rr">★★★★★</span>
+              </div>
+
+            </div>
+
+            <div class="sf">
+              <p>Fable Anniversary hiện có trên Steam, đã gồm toàn bộ nội dung The Lost Chapters. Nhớ hai điều: canh sale, và cắm tay cầm vào. Còn vụ chơi thiện hay ác thì... đừng cãi nhau với đứa ngồi cạnh, máy của ai người đó quyết.</p>
+              <iframe src="https://store.steampowered.com/widget/288470/" frameborder="0" width="100%" height="190" style="display:block;border-radius:4px;border:1px solid #8a6030;"></iframe>
+            </div>
+
+            <div class="pf">
+              <span class="pft">Ký ức điện tử</span>
+              <span class="pfb">Xbox · 2004</span>
+              <span class="pft">Lionhead Studios</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <span>Ký ức điện tử — Viết về game từ 1985 đến 2003</span>
+    <nav style="display:flex;gap:16px;">
+      <a href="#">Giới thiệu</a>
+      <a href="#">Danh sách game</a>
+      <a href="#">Liên hệ</a>
+    </nav>
+  </footer>
+
+</div>
+
+<script>
+  function showHome() {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-home').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function showArticle(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>
