@@ -1,0 +1,215 @@
+═══════════════════════════════════════════════════════════════════════
+  KÝ ỨC ĐIỆN TỬ — KIM CHỈ NAM DỰ ÁN  (context v5)
+  Cập nhật: theme "Tạp chí Thế Giới Game" + kiến trúc nhiều file
+  Đưa file này cho Claude ở đầu mỗi session mới là đủ để bắt nhịp.
+═══════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 0. ĐƯA GÌ CHO CLAUDE Ở SESSION MỚI                                   │
+└─────────────────────────────────────────────────────────────────────┘
+Để viết + ghép một bài mới, đưa cho Claude 4 file nền + 2 thứ theo bài:
+
+  FILE NỀN (gửi 1 lần mỗi session):
+   1. context_ky_uc_dien_tu_v5.txt   ← file này (luật + quy ước)
+   2. style.css                       ← để Claude bám đúng theme
+   3. blade.html                      ← 1 bài mẫu làm khung sườn để chép
+   4. index.html                      ← để Claude soạn card + chèn đúng chỗ
+
+  THEO TỪNG BÀI:
+   5. Ảnh của game đó (bìa + vài ảnh trong game)
+   6. "Ký ức thô" của Thành về game đó (kể lộn xộn cũng được)
+
+Nói với Claude câu mở đầu kiểu:
+  "Đọc context v5. Mình muốn viết bài mới về [TÊN GAME]. Đây là ảnh và
+   ký ức thô của mình: ..."
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 1. BLOG LÀ GÌ — LINH HỒN                                             │
+└─────────────────────────────────────────────────────────────────────┘
+"Ký ức điện tử" là blog HỒI KÝ về game thế hệ đầu (1985–2003), viết như
+một người kể chuyện đời mình cho người cùng thế hệ nghe. Không phải trang
+review khô khan. Cảm xúc và ký ức đời thực là chính, thông số game là phụ.
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 2. GIỌNG VĂN — LUẬT BẤT DI BẤT DỊCH                                  │
+└─────────────────────────────────────────────────────────────────────┘
+• Xưng "tớ", gọi người đọc là "cậu". Thân mật, ấm, hài hước nhẹ, tự giễu.
+• Mở bài bằng ĐỜI THỰC trước, game xuất hiện sau (không mở kiểu "Game X
+  ra năm Y do hãng Z làm...").
+• Ký ức trộn vào từng đoạn, không tách thành mục riêng.
+• Nhân vật đời thực xuyên suốt: ÔNG ANH HÀNG XÓM (người cho chơi ké máy,
+  hay giới thiệu game). Thường quay lại ở đoạn Vĩ thanh.
+• Nói thẳng với người đọc. KHÔNG spoil twist quan trọng ("ai chơi rồi sẽ
+  hiểu").
+• Kiến thức hãng/lịch sử/doanh số dồn về CUỐI bài (mục "Nhìn lại sau
+  hơn hai mươi năm"). Có điểm trừ nói cho công bằng.
+• Kết bằng lời nhắn thực dụng (mua/chơi lại ở đâu) + một câu đùa nhẹ.
+• KHÔNG dùng từ chửi thề, không thô tục.
+
+  ĐÁNH DẤU ĐỂ THÀNH KIỂM TRA (quan trọng, giữ trung thực):
+   [TỚ TỰ THÊM]  = chi tiết đời thực Claude bịa cho mạch văn → Thành sửa.
+   [GOOGLE]      = thông tin tra trên mạng, không phải Thành nhớ → nên
+                   để trong ô ghi chú (.an) cho trung thực.
+  Ở bản nháp CHỮ thì để tag này rõ ràng. Ở bản HTML xuất bản thì gỡ tag,
+  gộp phần "tra được" vào ô .an một cách tự nhiên.
+
+  QUY TRÌNH VIẾT: Claude research kỹ (đặc biệt game TQ/Nhật/Đài ít tư liệu
+  → tra cả nguồn tiếng Trung), HỎI ký ức thô trước khi viết, ra bản nháp
+  chữ để Thành duyệt giọng → rồi mới dựng HTML.
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 3. CẤU TRÚC MỘT BÀI (thứ tự các mục)                                 │
+└─────────────────────────────────────────────────────────────────────┘
+  1) Mở — bối cảnh đời thực, game ló ra tự nhiên
+  2) Lần đầu chạm vào game — ấn tượng đầu, so sánh thời đó
+  3) Càng chơi càng lún — gameplay/điểm hay, trộn kỷ niệm
+  4) (tùy game) Cốt truyện / thế giới / nhạc / đồ họa
+  5) Nhìn lại sau hơn hai mươi năm — hãng, lịch sử, doanh số, điểm trừ
+  6) Vĩ thanh — quay về đời thực / ông anh hàng xóm
+  7) Chơi lại ở đâu — Steam/GOG + lưu ý thật thà
+  8) Con dấu điểm (.rs) + khối Steam (.sf)
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 4. KIẾN TRÚC KỸ THUẬT                                                │
+└─────────────────────────────────────────────────────────────────────┘
+• GitHub Pages, TĨNH (không backend → chưa làm được comment/rating thật;
+  để dành, nếu làm sẽ cần Firebase).
+• Kiến trúc NHIỀU FILE: mỗi game = 1 file <game>.html riêng.
+• style.css DÙNG CHUNG cho mọi trang. Đổi giao diện = sửa mỗi style.css.
+• GitHub: user 'ngocthanhnh-lgtm', repo 'ky-uc-game'.
+  Web sống tại: https://ngocthanhnh-lgtm.github.io/ky-uc-game/
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 5. THEME HIỆN TẠI — "TẠP CHÍ THẾ GIỚI GAME"                          │
+└─────────────────────────────────────────────────────────────────────┘
+Cảm hứng: cuốn tạp chí game giấy 199x mà Thành đọc mòn gáy hồi nhỏ.
+• Font: Oswald (tít, IN HOA, condensed) + Bitter (thân bài, serif dễ đọc).
+• Màu (khai báo trong :root của style.css):
+    --pulp #ece3cf (giấy) · --ink #1a1a17 (mực) · --red #b8362b (măng-sét,
+    điểm) · --desk #241f18 (nền quanh trang).
+• Dấu ấn: măng-sét đỏ + wordmark, ô điểm review đỏ đóng dấu nghiêng,
+  halftone chấm mờ, kẻ đôi ngăn mục, dòng nhại "GIÁ 10.000Đ".
+• Trang chủ và trang bài dùng CHUNG măng-sét đỏ + nav.
+• (Hướng "màn hình CRT/DOS" đã thiết kế sẵn — để DÀNH cho một bài game
+  8-bit sau này, không dùng cho toàn site.)
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 6. QUY ƯỚC ĐẶT TÊN FILE (rất quan trọng khi ghép)                    │
+└─────────────────────────────────────────────────────────────────────┘
+Mỗi game có 1 "mã ngắn" (slug) không dấu, ví dụ blade, grandia, fable,
+amadis. Từ slug đó suy ra:
+  • Trang bài:      <slug>.html            vd: blade.html
+  • Icon thumbnail: <slug>-icon.jpg        (VUÔNG 400x400, cho card trang chủ)
+  • Ảnh trong bài:  <slug>-<cảnh>.jpg       vd: blade-cover.jpg, blade-menu.jpg,
+                                                 blade-combat.jpg...
+  • id view:        id="view-<slug>"
+  • class tile:     t-<slug>  (nền màu khi CHƯA có icon ảnh)
+Tất cả ảnh + html + style.css nằm CÙNG một thư mục gốc của repo.
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 7. KHUNG SƯỜN HTML MỘT BÀI (chép từ blade.html)                      │
+└─────────────────────────────────────────────────────────────────────┘
+<head>: nạp font Oswald + Bitter, rồi <link rel="stylesheet" href="style.css">
+Thân:
+  .site
+   ├─ header.topbar (măng-sét + nav) ── giống hệt mọi trang
+   ├─ div#view-<slug>.view.active
+   │   └─ div (wrapper) > .lw > .li > .pg > .pgi
+   │       ├─ button.back  → onclick location.href='index.html'
+   │       ├─ .ph  (đầu bài)
+   │       │    .ey  = "Hãng · Nền tảng Năm · Thể loại"
+   │       │    .gtr > .gtm (tên game) [+ .gtii nếu có số La Mã, vd II]
+   │       │    .ps1 / .ps2 = câu phụ đề (2 dòng)
+   │       │    .ho = "✦ ✦ ✦"
+   │       ├─ .pb  (thân bài)
+   │       │    .imf > img            = ảnh (khung); .imc = chú thích ảnh
+   │       │    .imf > .ig > img,img  = 2 ảnh cạnh nhau
+   │       │    .do = "✦"             = ngăn cách đoạn
+   │       │    h2.bh                 = tít mục
+   │       │    p.bp                  = đoạn văn (p.bp.dc = có chữ cái to đầu đoạn)
+   │       │    .an > p               = ô ghi chú/kỷ niệm bên lề
+   │       │    .rs (.rl + .rr)       = con dấu điểm ở cuối, vd .rr = ★★★★☆
+   │       ├─ .sf > p + <iframe...>   = lời nhắn + widget Steam
+   │       └─ .pf (.pft/.pfb/.pft)    = chân bài (colophon)
+   └─ footer.site-footer
+Widget Steam: <iframe src="https://store.steampowered.com/widget/<APPID>/"
+  frameborder="0" width="100%" height="190"
+  style="display:block;border-radius:4px;border:1px solid #8a6030;"></iframe>
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 8. THÊM CARD VÀO index.html                                          │
+└─────────────────────────────────────────────────────────────────────┘
+Chèn khối này vào phần "Bài viết mới nhất" (bài mới để lên đầu → đổi ngày
+mới hơn). Nếu ĐÃ có <slug>-icon.jpg thì dùng thumbnail ảnh; chưa có thì
+dùng tile-chữ .t-<slug>.
+
+  Kiểu ẢNH:
+  <div class="article-card" onclick="location.href='<slug>.html'">
+    <div class="thumb"><img src="<slug>-icon.jpg" alt="Tên game"></div>
+    <div>
+      <div class="art-meta-top"><span class="badge b-pc">PC</span>NĂM</div>
+      <div class="art-title">Tên game — phụ đề</div>
+      <div class="art-excerpt">1–2 câu nhử mồi giọng "tớ".</div>
+      <div class="art-meta-bot"><span class="art-date">NGÀY</span><span class="rating">★★★★☆</span></div>
+    </div>
+  </div>
+
+  Kiểu TILE-CHỮ (khi chưa có ảnh): thay dòng .thumb bằng
+    <div class="thumb t-<slug>"><span class="thumb-inner">TÊN<br>GAME</span></div>
+  và nhớ thêm màu cho .t-<slug> trong style.css (phần "nền tile theo game").
+
+Nhớ thêm 1 dòng vào sidebar "Được đọc nhiều nhất" nếu muốn.
+Badge nền tảng: b-pc / b-dc (Dreamcast) / b-xbox / b-ps1 / b-dos / b-snes.
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 9. ĐANG CÓ 4 BÀI (đã hiệu chỉnh & giữ lại)                           │
+└─────────────────────────────────────────────────────────────────────┘
+  grandia.html — Grandia II (Dreamcast 2000, Game Arts) ★★★★★  Steam 330390
+  fable.html   — Fable (Xbox 2004) ★★★★★
+  amadis.html  — The Lord of Beast: Chronicle of Amadis (PC 2002, Đài Loan) ★★★★☆
+  blade.html   — Blade & Sword (PC 2002, Pixel Studio) ★★★★☆  Steam 1792820
+  (Freedom Fighters & Seal of Evil ĐÃ XÓA khỏi site.)
+
+  Ghi chú đã sửa: tên tiếng Trung của Blade & Sword là 刀剑封魔录 (Đao Kiếm
+  Phong Ma Lục), KHÔNG phải 剑侠 như bản context cũ ghi nhầm.
+
+  Cả 4 game ĐÃ có icon ảnh vuông (grandia/fable/amadis/blade -icon.jpg).
+  Câu tựa blog (footer): "Nơi tớ ngồi nhắc lại những trò chơi đi cùng năm
+  tháng tuổi thơ". Header phụ đề: "/ Tạp chí hoài niệm trò chơi".
+  Sidebar đã BỎ mục "Theo nền tảng"; còn "Được đọc nhiều nhất" + "Theo thể loại".
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 10. CẬP NHẬT LÊN GITHUB (làm trên web github.com)                    │
+└─────────────────────────────────────────────────────────────────────┘
+  1. Vào repo: github.com/ngocthanhnh-lgtm/ky-uc-game
+  2. "Add file → Upload files", kéo thả các file mới vào (trùng tên =
+     ghi đè). Nhớ đủ: style.css, index.html, các <slug>.html, và MỌI ảnh
+     (<slug>-icon.jpg + <slug>-*.jpg).
+  3. Ô "Commit changes" ở dưới → bấm "Commit".
+  4. Đợi ~1 phút cho GitHub Pages dựng lại, rồi mở link web kiểm tra
+     (Ctrl+F5 để xóa cache nếu chưa thấy đổi).
+  5. Xóa bài: mở file cần xóa (vd freedom.html) → icon thùng rác →
+     Commit. Đừng xóa nhầm ảnh của 4 bài đang giữ.
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ 11. SKILL "EMAIL BRIEF" (giữ nguyên, không liên quan blog)           │
+└─────────────────────────────────────────────────────────────────────┘
+  Trigger: "brief email" hoặc "sáng nay có gì". Đọc Gmail 24h, lọc email
+  quan trọng (công việc/nghề nghiệp/cảnh báo/tài chính), bỏ quảng cáo.
+  Format mỗi email: Tiêu đề + tổ chức | Giờ nhận | Tóm tắt 1–2 câu |
+  → Cần làm: [hành động]. Sắp theo 🔴🟡🟢.
+
+═══════════════════════════════════════════════════════════════════════
+  Hết. File này thay thế context v4.
+═══════════════════════════════════════════════════════════════════════
